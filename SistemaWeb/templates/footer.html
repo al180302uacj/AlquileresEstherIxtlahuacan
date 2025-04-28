@@ -1,0 +1,54 @@
+
+{% load static %}
+
+<div class="col-lg-3">
+    <div class="first-item">
+        <div class="logo">
+            <img src="{% static '../static/images/logo_negativo.png' %}" width="100">
+        </div>
+        <ul>
+            <li>Haz de tu evento una experiencia única con nuestros productos. Disfruta de cada momento con comodidad y estilo garantizados.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="col-lg-3">
+    <h4>Contenido</h4>
+    <ul>
+        <li><a href="/#Encuentra">Encuentra lo que Necesites</a></li>
+        <li><a href="/#Funcionamiento">Cómo Funciona</a></li>
+        <!--
+        <li><a href="/#Beneficios">Beneficios</a></li>
+        -->
+    </ul>
+</div>
+
+<div class="col-lg-3">
+    <h4>Enlaces</h4>
+    <ul>
+        <li><a href="/productos/">Productos</a></li>
+        <li><a href="/contacto/">Contacto</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/micuenta/">Mi Cuenta</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+<div class="col-lg-3">
+    <h4>Contacto</h4>
+    <ul>
+        <li><i class="bi bi-telephone"></i>(+52) 312-152-4678</li>
+        <li class="d-flex align-items-start"><i class="bi bi-geo-alt"></i>Col. Francisco Villa. C. Arroyo Seco #127</li>
+    </ul>
+</div>
+
+<div class="col-lg-12">
+    <div class="under-footer text-center">
+        <p>Copyright © 2025 Alquileres Esther.</p>
+        <ul>
+            <li><i class="bi bi-facebook"></i></li>
+            <li><i class="bi bi-twitter-x"></i></li>
+            <li><i class="bi bi-instagram"></i></li>
+        </ul>
+    </div>
+</div>

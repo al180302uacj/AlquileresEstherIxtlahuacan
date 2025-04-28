@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="icon" href="{% static 'images/Icon_Empresa.ico' %}" type="image/x-icon">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+        <title>Alquileres Esther | Crear Cuenta</title>
+    </head>
+
+    <body class="gris-claro">
+
+        <section>
+            <div class="container mt-5 mb-2">
+                <div class="row">
+                    <div>
+                        <a href="/" class="text-blue">
+                            <i class="bi bi-arrow-bar-left"></i>
+                            Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container signup-card form-space mb-5">
+
+                <div class="row">
+                    <h4 class="mt-4">Crear Cuenta</h4>
+                    <span class="mb-4">Ingrese sus datos a continuación para crear su cuenta y empezar a alquilar.</span>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="first_name">
+                                <span>Nombre </span>
+                            </label>
+                            <div>
+                                <input type="text" name="first_name" id="first_name" placeholder="Nombre" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="last_name">
+                                <span>Apellido </span>
+                            </label>
+                            <div>
+                                <input type="text" name="last_name" id="last_name" placeholder="Apellido" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="address" class="mt-2">
+                                Dirección <small class="text-muted">(colonia, calle, número)</small>
+                            </label>
+                            <div>
+                                <textarea name="address" id="address" placeholder="Ej. Col. Centro, Calle Hidalgo, #123"required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div id="municipio-alerta" class="alert alert-warning alert-dismissible fade show mt-3" role="alert" style="display: none;">
+                                <strong>¡Advertencia!</strong> Solo se hacen envíos dentro de <i>Ixtlahuacán, Col</i>.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="phone">
+                                <span>Teléfono</span>
+                            </label>
+                            <div>
+                                <input type="text" name="phone" id="phone" placeholder="Teléfono" required oninput="formatPhoneNumber(this)">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="email">
+                                <span>Correo Electrónico</span>
+                            </label>
+                            <div>
+                                <input type="email" name="email" id="email" placeholder="Correo Electrónico" required>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="password" class="mt-2">
+                                <span>Contraseña</span>
+                            </label>
+                            <div>
+                                <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="password-confirm" class="mt-2">
+                                <span>Confirmar Contraseña</span>
+                            </label>
+                            <div>
+                                <input type="password" name="password-confirm" id="password-confirm" placeholder="Confirmar Contraseña" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="is-admin" class="mt-2">
+                                <span>¿Eres Administrador?</span>
+                            </label>
+                            <div>
+                                <input type="checkbox" name="is-admin" id="is-admin"  onchange="toggleAdminFields()">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6" id="admin-access" style="display:none;">
+                            <label for="clave-acceso" class="mt-2">
+                                Clave de Acceso para Administrador
+                            </label>
+                            <div>
+                                <input type="password" name="clave-acceso" id="clave-acceso" placeholder="Clave Administrdor">
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if error %}
+                    <div class="container mt-5">
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            {{error|safe}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row justify-content-center" id="botones-contenedor">
+                        <button type="submit" name="usuario" id="btn-usuario" class="col-lg-2 gray-button button-act mt-4">Crear Usuario</button>
+                        <button type="submit" name="admin" id="btn-admin" class="col-lg-2 gray-button button-act mt-4" style="display:none;">Crear Admin</button>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div id="ubicacion-alerta" class="alert alert-danger d-none mt-4" role="alert">
+                            Este servicio solo está disponible en <strong>Ixtlahuacán, Col</strong>.
+                        </div>
+                    </div>
+
+                </form>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="footer text-center pt-4">
+                            ¿Ya tienes una cuenta? 
+                            <a href="/iniciosesion/" class="text-blue">Inicia Sesión</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <script>
+            function toggleAdminFields() {
+                var isAdmin = document.getElementById('is-admin').checked;
+                var adminAccessField = document.getElementById('admin-access');
+                var btnUsuario = document.getElementById('btn-usuario');
+                var btnAdmin = document.getElementById('btn-admin');
+        
+                if (isAdmin) {
+                    adminAccessField.style.display = 'block';
+                    btnAdmin.style.display = 'block';  
+                    btnUsuario.style.display = 'none'; 
+                } else {
+                    adminAccessField.style.display = 'none';
+                    btnAdmin.style.display = 'none'; 
+                    btnUsuario.style.display = 'block'; 
+                }
+            }
+        </script>
+
+        <script>
+            function formatPhoneNumber(input) {
+                let value = input.value.replace(/\D/g, '');
+
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+
+                if (value.length <= 3) {
+                    input.value = value;
+                } else if (value.length <= 6) {
+                    input.value = value.substring(0, 3) + '-' + value.substring(3);
+                } else {
+                    input.value = value.substring(0, 3) + '-' + value.substring(3, 6) + '-' + value.substring(6, 10);
+                }
+            }
+        </script>
+
+        <script>
+            document.getElementById("address").addEventListener("blur", function() {
+            const direccion = this.value.toLowerCase();
+            const alerta = document.getElementById("municipio-alerta");
+            
+            if (!direccion.includes("tu municipio")) {
+                alerta.style.display = "block";
+            } else {
+                alerta.style.display = "none";
+            }
+            });
+        </script>
+
+    </body>
+</html>

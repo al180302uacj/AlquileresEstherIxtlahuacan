@@ -1,0 +1,55 @@
+
+{% load static %}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img src="{% static '../static/images/logo.png' %}" width="150">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse text-center" id="navbarNavAltMarkup">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/productos/">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contacto/">Contacto</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/micuenta/">Mi Cuenta</a>
+                </li>
+                {% endif %}
+                {% if user.is_admin or user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/administracion/">Administración</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="navbar-buttons">
+                {% if user.is_authenticated %}
+                <div class="rentar-button button-act">
+                    <a href="/rentar/">Rentar</a>
+                </div>
+                <div class="login-button button-act">
+                    <a href="/cerrarsesion/">Cerrar Sesión</a>
+                </div>
+                {% else %}
+                <div class="login-button-dos button-act">
+                    <a href="/iniciosesion/">Iniciar Sesión</a>
+                </div>
+                <div class="signup-button button-act">
+                    <a href="/crearcuenta/">Crear Cuenta</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
