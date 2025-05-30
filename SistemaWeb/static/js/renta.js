@@ -23,7 +23,7 @@ for (i = 0; i < startBtn.length; i++) {
 }
 
 function updateUserOrder(productId, action, reload) {
-    var url = '/ActualizarRenta/'
+    var url = '/actualizarrenta/'
 
     fetch(url, {
         method: 'POST',
