@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="icon" href="{% static 'images/Icon_Empresa.ico' %}" type="image/x-icon">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+        <title>Alquileres Esther | Administración</title>
+
+    </head>
+
+    <body>
+
+        <header class="header-area sticky-top">
+            <div class="container-fluid">
+                <div class="row">
+                    {% include 'nav.html' %}
+                </div>
+            </div>
+        </header>
+
+        <section>
+            <div class="container-fluid gris-claro">
+                <div class="container">
+
+                    <div class="row pt-5">
+                        <div class="nav nav-tabs justify-content-evenly" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-renta-tab" data-bs-toggle="tab" data-bs-target="#nav-renta" type="button" role="tab" aria-controls="nav-renta" aria-selected="true">Historial de Rentas</button>
+    
+                            <button class="nav-link" id="nav-inventario-tab" data-bs-toggle="tab" data-bs-target="#nav-inventario" type="button" role="tab" aria-controls="nav-inventario" aria-selected="false">Gestión de Inventario</button>
+
+                            <button class="nav-link" id="nav-reportes-tab" data-bs-toggle="tab" data-bs-target="#nav-reportes" type="button" role="tab" aria-controls="nav-reportes" aria-selected="false">Elaborar Reporte</button>
+                        </div>
+                    </div>
+        
+                    <div class="row pb-5">
+                        <div class="tab-content card-borders" id="nav-tabContent">
+                            <div class="tab-pane fade" id="nav-inventario" role="tabpanel" aria-labelledby="nav-inventario-tab">
+                                <div class="container table-responsive-lg mt-3">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="color: #2e86c1;">Imagen</th>
+                                                <th scope="col" style="color: #2e86c1;">Nombre</th>
+                                                <th scope="col" style="color: #2e86c1;">Descripción</th>
+                                                <th scope="col" style="color: #2e86c1;">Categoría</th>
+                                                <th scope="col" style="color: #2e86c1;">Precio</th>
+                                                <th scope="col" style="color: #2e86c1;">Stock</th>
+                                                <th scope="col" style="color: #2e86c1;">Editar</th>
+                                                <th scope="col" style="color: #2e86c1;">Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for producto in productos %}
+                                            <tr>
+                                                <td class="center-vertical"><img src="{{producto.imagen}}" width="100"></td>
+                                                <th scope="row" class="center-vertical">{{producto.nombre}}</th>
+                                                <td class="center-vertical">{{producto.descripcion}}</td>
+                                                <td class="center-vertical">{{producto.categoria}}</td>
+                                                <td class="center-vertical">$ {{producto.precio_renta}}</td>
+                                                <td class="center-vertical">{{producto.stock}}</td>
+                                                <td class="center-vertical"><a href="{% url 'editproduct' producto.id %}"><i class="bi bi-pencil-square fs-4"></i></a></td>
+                                                <td class="center-vertical"><a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ producto.id }}"><i class="bi bi-trash3 fs-4"></i></a></td>
+
+                                                <div class="modal fade" id="deleteModal{{ producto.id }}" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Confirmar Acción</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <span class="text-blue">Eliminar Producto</span>
+                                                            <div class="mt-2">
+                                                                ¿Estás seguro de que quieres eliminar el producto <strong>{{ producto.nombre }}</strong>?
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="white-button button-act" data-bs-dismiss="modal">Cancelar</button>
+                                                            <a href="{% url 'deleteproduct' producto.id %}" class="gray-button button-act">Eliminar</a>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </tr>
+                                            {% endfor %}
+                                            <tr>
+                                                <td colspan="8" class="text-center">
+                                                    <div class="home-seeproducts button-act" style="display: inline-block;">
+                                                        <a href="/añadirproducto/">Agregar Producto</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade show active" id="nav-renta" role="tabpanel" aria-labelledby="nav-renta-tab">
+                                <div class="container">
+                                    <div class="container table-responsive-lg mt-3">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="color: #2e86c1;">Orden</th>
+                                                    <th scope="col" style="color: #2e86c1;">Estado</th>
+                                                    <th scope="col" style="color: #2e86c1;">Usuario</th>
+                                                    <th scope="col" style="color: #2e86c1;">Dirección de Envío</th>
+                                                    <th scope="col" style="color: #2e86c1;">Fecha de Entrega</th>
+                                                    <th scope="col" style="color: #2e86c1;">Productos</th>
+                                                    <th scope="col" style="color: #2e86c1;">Cantidad</th>
+                                                    <th scope="col" style="color: #2e86c1;">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for renta in rentas %}
+                                                <tr>
+                                                    <th scope="row" class="center-vertical">{{renta.id}}</th>
+                                                    <td class="center-vertical">
+                                                        <button type="button" class="no-button-style button-act" data-bs-toggle="modal" data-bs-target="#Modal-{{renta.id}}">
+                                                            <span class="badge 
+                                                            {% if renta.estado == 'Completado' %}
+                                                            text-bg-green
+                                                            {% elif renta.estado == 'Cancelado' %}
+                                                                text-bg-red
+                                                            {% else %}
+                                                                text-bg-gray
+                                                            {% endif %}">{{renta.estado}}</span>
+                                                        </button>
+
+                                                        <div class="modal fade" id="Modal-{{renta.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <form method="post" action="{% url 'updatestatus' renta.id %}">
+                                                                        {% csrf_token %}
+                                                                        <div class="modal-header">
+                                                                            <h1 class="modal-title fs-5" id="exampleModalLongTitle">Orden - {{renta.id}}</h1>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="row">
+                                                                                <span class="text-blue">Estado de la Orden</span>
+                                                                                <ul class="mt-3">
+                                                                                    <li><strong>Estado Actual: </strong><span class="badge
+                                                                                        {% if renta.estado == 'Completado' %}
+                                                                                        text-bg-green
+                                                                                        {% elif renta.estado == 'Cancelado' %}
+                                                                                            text-bg-red
+                                                                                        {% else %}
+                                                                                            text-bg-gray
+                                                                                        {% endif %}">{{renta.estado}}</span>
+                                                                                    </li>
+                                                                                    <li class="mt-1"><strong>Cambiar Estado: </strong>
+                                                                                        <select class="mt-1" name="order-status" id="order-status">
+                                                                                            <option value="Pendiente">Pendiente</option>
+                                                                                            <option value="Completado">Completado</option>
+                                                                                            <option value="Cancelado">Cancelado</option>
+                                                                                        </select>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="white-button button-act" data-bs-dismiss="modal">Cancelar</button>
+                                                                            <button type="submit" class="gray-button button-act">Guardar</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                    </td>
+                                                    <td class="center-vertical">
+                                                    {% if renta.nombre_cliente and renta.telefono_cliente %}
+                                                        {{renta.nombre_cliente}}
+                                                        <br>
+                                                        <i>{{renta.telefono_cliente}}</i>
+                                                    {% else %}
+                                                        {{renta.usuario}}
+                                                        <br>
+                                                        <i>{{renta.usuario.telefono}}</i>
+                                                    {% endif %}
+                                                    </td>
+                                                    <td class="center-vertical">{{renta.direccion_envio}}</td>
+                                                    <td class="center-vertical">{{renta.fecha_evento}}</td>
+                                                    <td class="center-vertical">
+                                                        <ul>
+                                                            {% for item in renta.ordenproducto_set.all %}
+                                                                <li>{{item.producto.nombre}}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </td>
+                                                    <td class="center-vertical">
+                                                        <ul>
+                                                            {% for item in renta.ordenproducto_set.all %}
+                                                                <li>{{item.cantidad}}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </td>
+                                                    <td class="center-vertical">$ {{renta.total}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="nav-reportes" role="tabpanel" aria-labelledby="nav-reportes-tab">
+                                <div class="container mb-5">
+                                    <div class="row">
+                                        <span class="mt-4 text-blue">Detalles de Rentas</span>
+                                        <h4 class="mt-4">Nuevo Reporte</h4>
+                                        <span class="mb-4">Seleccione el periodo que desee visualizar en el reporte.</span>
+                                    </div>
+                                    <form id="reporte-form" method="post">
+                                        {% csrf_token %}
+                                        <div class="row mt-2">
+                                            <div class="col-lg-6">
+                                                <label for="filtro-mes">
+                                                    <span>Filtrar por Meses</span>
+                                                </label>
+                                                <div>
+                                                    <select name="filtro-mes" id="filtro-mes">
+                                                        <option value="todos-meses">Todos los Meses</option>
+                                                        {% for numero_mes, nombre_mes in meses_filtrados %}
+                                                        <option value="{{ numero_mes }}">{{ nombre_mes }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <label for="filtro-year">
+                                                    <span>Filtrar por Año</span>
+                                                </label>
+                                                <div>
+                                                    <select name="filtro-year" id="filtro-year">
+                                                        <option value="all-years">Todos los Años</option>
+                                                        {% for anio in anios_filtrados %}
+                                                        <option value="{{ anio }}">{{ anio }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="col-lg-6">
+                                                <label for="filtro-usuario">
+                                                    <span>Filtrar por Usuario</span>
+                                                </label>
+                                                <div>
+                                                    <select name="filtro-usuario" id="filtro-usuario">
+                                                        <option value="all-users">Todos los Usuarios</option>
+                                                        {% for u in usuarios_filtrados %}
+                                                        <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <label for="filtro-estado">
+                                                    <span>Filtrar por Estado</span>
+                                                </label>
+                                                <div>
+                                                    <select name="filtro-estado" id="filtro-estado">
+                                                        <option value="all-status">Todos los Estados</option>
+                                                        {% for valor, nombre in estados_filtrados %}
+                                                        <option value="{{ valor }}">{{ nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="col-lg-6">
+                                                <label for="todos-filtros">
+                                                    Mostrar Todos los Registros
+                                                </label>
+                                                <div>
+                                                    <input type="checkbox" name="todos-filtros" id="todos-filtros">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="row justify-content-center">
+                                                <button type="submit" class="col-lg-2 gray-button button-act mt-4">Generar Reporte</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    {% include 'footer.html' %}
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('reporte-form');
+                const mesInput = document.getElementById('filtro-mes');
+                const anioInput = document.getElementById('filtro-year');
+                const usuarioInput = document.getElementById('filtro-usuario');
+                const estadoInput = document.getElementById('filtro-estado');
+                const todosCheckbox = document.getElementById('todos-filtros');
+        
+                todosCheckbox.addEventListener('change', function () {
+                    const disabled = this.checked;
+                    mesInput.disabled = disabled;
+                    anioInput.disabled = disabled;
+                });
+        
+                if (form) {
+                    form.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+        
+                        const mes = mesInput.value;
+                        const anio = anioInput.value;
+                        const usuario = usuarioInput.value;
+                        const estado = estadoInput.value;
+                        const todos = todosCheckbox.checked;
+        
+                        try {
+                            const response = await fetch('/generarreporte/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken')
+                                },
+                                body: JSON.stringify({ mes, anio, usuario, estado, todos })
+                            });
+        
+                            if (!response.ok) throw new Error('Error al obtener los datos');
+        
+                            const result = await response.json();
+                            const datos = result.data;
+        
+                            if (datos.length === 0) {
+                                alert('No se encontraron registros.');
+                                return;
+                            }
+        
+                            const mesesNombres = [
+                                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                            ];
+        
+                            let titulo = "Reporte de Alquileres";
+        
+                            const { jsPDF } = window.jspdf;
+                            const doc = new jsPDF();
+        
+                            doc.setFontSize(16);
+                            doc.text(titulo, 14, 20);
+
+                            let sumaTotal = datos.reduce((acc, item) => acc + parseFloat(item.total), 0);
+                            let textoTotalParte1 = "Total: ";
+                            let textoTotalParte2 = `$${sumaTotal.toFixed(2)}`;
+
+                            doc.setFontSize(14);
+                            doc.setFont("helvetica", "bold");
+                            doc.setTextColor(46, 134, 193);
+                            doc.text(textoTotalParte1, 14, 28);
+
+                            doc.setFontSize(13);
+                            doc.setFont("helvetica", "normal");
+                            doc.setTextColor(0, 0, 0);
+                            doc.text(textoTotalParte2, 28, 28);
+                            doc.setFontSize(12);
+        
+                            const columnas = [
+                                "Orden", "Estado", "Usuario", "Dirección", "Entrega",
+                                "Producto", "Cantidad", "Total"
+                            ];
+        
+                            const filas = datos.map(item => ([
+                                item.orden_id,
+                                item.estado,
+                                item.usuario,
+                                item.direccion_envio,
+                                item.fecha_entrega,
+                                item.producto,
+                                item.cantidad,
+                                `$${item.total}`
+                            ]));
+
+                            doc.autoTable({
+                                head: [columnas],
+                                body: filas,
+                                startY: 35,
+                                styles: { fontSize: 9 },
+                                headStyles: { fillColor: [42, 42, 42] },
+                            });
+        
+                            doc.save("ReporteAlquileres.pdf");
+        
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Hubo un problema al generar el reporte.');
+                        }
+                    });
+                }
+            });
+        
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        </script>                
+        
+    </body>
+</html>

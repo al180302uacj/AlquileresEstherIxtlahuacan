@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="icon" href="{% static 'images/Icon_Empresa.ico' %}" type="image/x-icon">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+    
+            function getToken(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getToken('csrftoken')
+        </script>
+
+        <title>Alquileres Esther | Productos</title>
+    </head>
+
+    <body>
+        
+        <header class="header-area sticky-top">
+            <div class="container-fluid">
+                <div class="row">
+                    {% include 'nav.html' %}
+                </div>
+            </div>
+        </header>
+
+        <div class="toast-container position-fixed top-3 end-0 p-3">
+            <div id="toast-rentar" class="toast" data-bs-autohide="true" data-bs-delay="2500">
+                <div class="toast-header">
+                    <strong class="me-auto" style="color: #2a2a2a;">Producto Añadido!</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Presiona el botón de arriba <strong><a href="/rentar/">Rentar</a></strong>
+                </div>
+            </div>
+        </div>
+
+        <section>
+            <div class="container-fluid mt-4 mb-4">
+                <div class="container">
+                    <div class="row text-center">
+                        <h2>Productos</h2>
+                        <span>Descubre nuestra selección de artículos de mobiliario disponibles para alquiler.</span>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-evenly align-items-center mt-5">
+                        <div class="h5"><a href="#Sillas" class="product-link">Sillas</a></div>
+                        <div class="h5"><a href="#Mesas" class="product-link">Mesas</a></div>
+                        <div class="h5"><a href="#Manteleria" class="product-link">Mantelería</a></div>
+                        <div class="h5"><a href="#Otros" class="product-link">Otros</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container-fluid gris-claro pt-4">
+                <div class="container">
+                    <div class="row text-center">
+                        <h3 id="Sillas">Sillas</h3>
+                        <span>Cómodos asientos para cada espacio.</span>
+
+                        <div class="card-box justify-content-evenly flex-wrap">
+
+                            {% for producto in productos %}
+                            {% if producto.categoria.id == 1 %}
+                            <div class="card-white-products">
+                                <div class="mb-3">
+                                    <img src="{{producto.imagen}}" class="card-products">
+                                </div>
+                                <div class="border-top-line"></div>
+                                <div class="card-white-black-products">
+                                    <h5>{{producto.nombre}}</h5>
+                                    <span>$ {{producto.precio_renta}}</span>
+                                    <div class="mt-3">
+                                        <button type="button" class="gray-button button-act" data-bs-toggle="modal" data-bs-target="#Modal-{{producto.id}}">
+                                            Info.
+                                        </button>
+                                        {% if user.is_authenticated and producto.stock > 0 %}
+                                            {% if producto.id in productoSelect %}
+                                            <button type="button" class="blue-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="delete">
+                                                Añadido
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="white-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="add">
+                                                Añadir
+                                            </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        <div class="modal fade" id="Modal-{{producto.id}}" tabindex="-1" aria-labelledby="exampleModalLabel-{{producto.id}}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel-{{producto.id}}">{{producto.nombre}}</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <img src="{{producto.imagen}}" class="card-products">
+                                                            </div>
+                                                            <div class="col-lg-6 text-start">
+                                                                <span class="text-blue">Información del Producto</span>
+                                                                <ul class="mt-3">
+                                                                    <li><strong>Descripción:</strong> {{producto.descripcion}}</li>
+                                                                    <li class="mt-1"><strong>Precio Unitario:</strong>  $ {{producto.precio_renta}}</li>
+                                                                    <li class="mt-1"><strong>Stock Disponible:</strong>  {{producto.stock}}</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if not user.is_authenticated %}
+                                                    <div class="modal-footer">
+                                                        Necesitas <a href="/iniciosesion/">Iniciar Sesión</a> para alquilar.
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container-fluid mt-4">
+                <div class="container">
+                    <div class="row text-center">
+                        <h3 id="Mesas">Mesas</h3>
+                        <span>Superficies funcionales para disfrutar de tus eventos, compartir momentos especiales y mucho más.</span>
+
+                        <div class="card-box justify-content-evenly flex-wrap">
+
+                            {% for producto in productos %}
+                            {% if producto.categoria.id == 2 %}
+                            <div class="card-white-products">
+                                <div class="mb-3">
+                                    <img src="{{producto.imagen}}" class="card-products">
+                                </div>
+                                <div class="border-top-line"></div>
+                                <div class="card-white-black-products">
+                                    <h5>{{producto.nombre}}</h5>
+                                    <span>$ {{producto.precio_renta}}</span>
+                                    <div class="mt-3">
+                                        <button type="button" class="gray-button button-act" data-bs-toggle="modal" data-bs-target="#Modal-{{producto.id}}">
+                                            Info.
+                                        </button>
+                                        {% if user.is_authenticated and producto.stock > 0 %}
+                                            {% if producto.id in productoSelect %}
+                                            <button type="button" class="blue-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="delete">
+                                                Añadido
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="white-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="add">
+                                                Añadir
+                                            </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        <div class="modal fade" id="Modal-{{producto.id}}" tabindex="-1" aria-labelledby="exampleModalLabel-{{producto.id}}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel-{{producto.id}}">{{producto.nombre}}</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <img src="{{producto.imagen}}" class="card-products">
+                                                            </div>
+                                                            <div class="col-lg-6 text-start">
+                                                                <span class="text-blue">Información del Producto</span>
+                                                                <ul class="mt-3">
+                                                                    <li><strong>Descripción:</strong> {{producto.descripcion}}</li>
+                                                                    <li class="mt-1"><strong>Precio Unitario:</strong>  $ {{producto.precio_renta}}</li>
+                                                                    <li class="mt-1"><strong>Stock Disponible:</strong>  {{producto.stock}}</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if not user.is_authenticated %}
+                                                    <div class="modal-footer">
+                                                        Necesitas <a href="/iniciosesion/">Iniciar Sesión</a> para alquilar.
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container-fluid gris-claro pt-4">
+                <div class="container">
+                    <div class="row text-center">
+                        <h3 id="Manteleria">Mantelería</h3>
+                        <span>Conjuntos decorativos que transforman cada evento.</span>
+
+                        <div class="card-box justify-content-evenly flex-wrap">
+
+                            {% for producto in productos %}
+                            {% if producto.categoria.id == 3 %}
+                            <div class="card-white-products">
+                                <div class="mb-3">
+                                    <img src="{{producto.imagen}}" class="card-products">
+                                </div>
+                                <div class="border-top-line"></div>
+                                <div class="card-white-black-products">
+                                    <h5>{{producto.nombre}}</h5>
+                                    <span>$ {{producto.precio_renta}}</span>
+                                    <div class="mt-3">
+                                        <button type="button" class="gray-button button-act" data-bs-toggle="modal" data-bs-target="#Modal-{{producto.id}}">
+                                            Info.
+                                        </button>
+                                        {% if user.is_authenticated and producto.stock > 0 %}
+                                            {% if producto.id in productoSelect %}
+                                            <button type="button" class="blue-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="delete">
+                                                Añadido
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="white-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="add">
+                                                Añadir
+                                            </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        <div class="modal fade" id="Modal-{{producto.id}}" tabindex="-1" aria-labelledby="exampleModalLabel-{{producto.id}}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel-{{producto.id}}">{{producto.nombre}}</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <img src="{{producto.imagen}}" class="card-products">
+                                                            </div>
+                                                            <div class="col-lg-6 text-start">
+                                                                <span class="text-blue">Información del Producto</span>
+                                                                <ul class="mt-3">
+                                                                    <li><strong>Descripción:</strong> {{producto.descripcion}}</li>
+                                                                    <li class="mt-1"><strong>Precio Unitario:</strong>  $ {{producto.precio_renta}}</li>
+                                                                    <li class="mt-1"><strong>Stock Disponible:</strong>  {{producto.stock}}</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if not user.is_authenticated %}
+                                                    <div class="modal-footer">
+                                                        Necesitas <a href="/iniciosesion/">Iniciar Sesión</a> para alquilar.
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container-fluid mt-4">
+                <div class="container">
+                    <div class="row text-center">
+                        <h3 id="Otros">Otros</h3>
+                        <span>Elementos adicionales para complementar su reunión.</span>
+
+                        <div class="card-box justify-content-evenly flex-wrap">
+
+                            {% for producto in productos %}
+                            {% if producto.categoria.id == 4 %}
+                            <div class="card-white-products">
+                                <div class="mb-3">
+                                    <img src="{{producto.imagen}}" class="card-products">
+                                </div>
+                                <div class="border-top-line"></div>
+                                <div class="card-white-black-products">
+                                    <h5>{{producto.nombre}}</h5>
+                                    <span>$ {{producto.precio_renta}}</span>
+                                    <div class="mt-3">
+                                        <button type="button" class="gray-button button-act" data-bs-toggle="modal" data-bs-target="#Modal-{{producto.id}}">
+                                            Info.
+                                        </button>
+                                        {% if user.is_authenticated and producto.stock > 0 %}
+                                            {% if producto.id in productoSelect %}
+                                            <button type="button" class="blue-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="delete">
+                                                Añadido
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="white-button button-act producto-inicio" data-product="{{ producto.id }}" data-action="add">
+                                                Añadir
+                                            </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        <div class="modal fade" id="Modal-{{producto.id}}" tabindex="-1" aria-labelledby="exampleModalLabel-{{producto.id}}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel-{{producto.id}}">{{producto.nombre}}</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <img src="{{producto.imagen}}" class="card-products">
+                                                            </div>
+                                                            <div class="col-lg-6 text-start">
+                                                                <span class="text-blue">Información del Producto</span>
+                                                                <ul class="mt-3">
+                                                                    <li><strong>Descripción:</strong> {{producto.descripcion}}</li>
+                                                                    <li class="mt-1"><strong>Precio Unitario:</strong>  $ {{producto.precio_renta}}</li>
+                                                                    <li class="mt-1"><strong>Stock Disponible:</strong>  {{producto.stock}}</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if not user.is_authenticated %}
+                                                    <div class="modal-footer">
+                                                        Necesitas <a href="/iniciosesion/">Iniciar Sesión</a> para alquilar.
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-2">
+            <div class="container">
+                <div class="row">
+                    {% include 'footer.html' %}
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="{% static 'js/renta.js' %}"></script>
+
+        <script>
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const target = document.getElementById(targetId);
+                    
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+        
+                        history.replaceState(null, null, window.location.pathname);
+                    }
+                });
+            });
+        
+            window.addEventListener('load', function() {
+                if (window.location.hash) {
+                    const targetId = window.location.hash.substring(1);
+                    const target = document.getElementById(targetId);
+                    
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+        
+                        history.replaceState(null, null, window.location.pathname);
+                    }
+                }
+            });
+        </script>
+        
+        <script>
+            const buttons = document.querySelectorAll('.producto-inicio');
+        
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    if (button.classList.contains('blue-button')) {
+                        button.classList.remove('blue-button');
+                        button.classList.add('white-button');
+                
+                        button.textContent = 'Añadir';
+                        button.setAttribute('data-action', 'add');
+                    } else {
+                        showToast();
+                        button.classList.remove('white-button');
+                        button.classList.add('blue-button');
+                
+                        button.textContent = 'Añadido';
+                        button.setAttribute('data-action', 'delete');
+                    }
+                });
+            });
+        </script>
+        
+        <script>
+            function showToast() {
+                var toast = new bootstrap.Toast(document.getElementById('toast-rentar'));
+                toast.show();
+            }
+        </script>
+
+    </body>
+</html>
